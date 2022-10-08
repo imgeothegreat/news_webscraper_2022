@@ -1,15 +1,15 @@
 # news_webscraper_2022
-Created by @imgeothegreat
-Collects news Headlines from CNN and NBC News every day. Data collected automatically converted to a CSV File.
+- Created by @imgeothegreat
+- Collects news Headlines from CNN and NBC News every day. Data collected automatically converted to a CSV File.
 
 
 ## Still have missing features but the program already works. 
-[x] Auto Collect News Data every 24 Hours
-[x] Save to CSV File
-[ ] Still missing save to pdf 
-[ ] send email, 
-[ ] machine learning algo
-[ ] auto backup data
+- [x] Auto Collect News Data every 24 Hours
+- [x] Save to CSV File
+- [ ] Still missing save to pdf 
+- [ ] send email, 
+- [ ] machine learning algo
+- [ ] auto backup data
 
 ##Sample CSV File
 ![image](https://user-images.githubusercontent.com/27014232/194724600-d07f1d42-a93a-4c28-8d47-863ff9cd787d.png)
