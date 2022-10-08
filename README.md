@@ -1,12 +1,12 @@
 # news_webscraper_2022
 Collects news Headlines from CNN and NBC News every day. Data collected automatically converted to a CSV File.
 
-# Still underwork not fully working
+# Still have missing features but the program already works. Still missing save to pdf, send email, machine learning algo, auto backup data
 
 # Data Collected:
-#News Headline
-#News Link
-#Data Published
+*News Headline
+*News Link
+*Data Published
 
 CSV File is called data.csv
 
