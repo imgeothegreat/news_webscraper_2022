@@ -19,7 +19,14 @@
 - News Link
 - Data Published
 
-CSV File is called data.csv
+CSV File is called data.csv]
+
+## Required Packages for program to work:
+- csv
+- requests
+- time
+- datetime
+- bs4
 
 ## NOTES
 Some website links from CNN are from their own websites and they only use /style links with no HTTPS from the beginning. That is why I made a function that
