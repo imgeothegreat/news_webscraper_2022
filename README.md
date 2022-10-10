@@ -6,7 +6,8 @@
 ## Still have missing features but the program already works. 
 - [x] Auto Collect News Data every 24 Hours
 - [x] Save to CSV File
-- [ ] Still missing save to pdf 
+- [x] Search by Company, Date (Day,Month,Year,Custom), All
+- [ ] Save to pdf incomplete
 - [ ] send email, 
 - [ ] machine learning algo
 - [ ] auto backup data
