@@ -1,7 +1,6 @@
 import csv
 import requests
-import time
-#import nltk
+# import nltk
 import datetime
 import pandas as pd
 import pdfkit
@@ -9,27 +8,21 @@ import os
 from datetime import date
 from bs4 import BeautifulSoup
 
+# global variables
+news_list = {'NBC': {}, 'CNN': {}}
 
-#global variables
-news_list = {}
-news_list['NBC'] = {}
-news_list['CNN'] = {}
+# DATE and TIME
 
-#DATE and TIME
-
-today=date.today()
+today = date.today()
 date_now = today.strftime("%m-%d-%y")
 
 
-
-#auto collect news data and add to csv file
+# auto collect news data and add to csv file
 def auto_collect_news_data():
-
-    #SECTION TEXT
-    section = ["Coronavirus", "U.S. News", "Politics", "World", "Local", "Business", "Health", "Investigations"
-               , "Culture Matters", "Science", 'Sports', "Tech & Media", "Decision 2022", "Video Features",
+    # SECTION TEXT
+    section = ["Coronavirus", "U.S. News", "Politics", "World", "Local", "Business", "Health", "Investigations",
+               "Culture Matters", "Science", 'Sports', "Tech & Media", "Decision 2022", "Video Features",
                "Photos", "Weather", "Select", "Asian America", "NBCBLK", "NBC Latino", "NBC Out"]
-
 
     print("Date: " + date_now)
     nbc_url = "https://www.nbcnews.com/world"
@@ -38,10 +31,10 @@ def auto_collect_news_data():
 
     nbcobj = BeautifulSoup(nbc_html.content, 'lxml')
 
-    # NBCNEWS
+    # NBC NEWS
 
-    title_list=[]
-    link_list=[]
+    title_list = []
+    link_list = []
 
     for link in nbcobj.find_all('h2', {'class': 'tease-card__headline'}):
         news_list['NBC'][link.text] = link.a['href']
@@ -53,20 +46,19 @@ def auto_collect_news_data():
         text = link.text
         for words in section:
             text = text.removeprefix(words)
-            if(len(link.text) != len(text)):
+            if len(link.text) != len(text):
                 break
 
         title_list.append(text)
         news_list['NBC'][text] = link.a['href']
 
-
-    for link in nbcobj.find_all('a',{'class':'wide-tease-item__image-wrapper flex-none relative dn dt-m'}):
+    for link in nbcobj.find_all('a', {'class': 'wide-tease-item__image-wrapper flex-none relative dn dt-m'}):
         link_list.append(link.get('href'))
 
     for (words, links) in zip(title_list, link_list):
         news_list['NBC'][words] = links
 
-    # CNNNEWS
+    # CNN NEWS
 
     cnn_url = "https://edition.cnn.com/world"
 
@@ -111,11 +103,8 @@ def auto_collect_news_data():
     print("Data saved to CSV File Successfully\n")
 
 
-#collect news data on the web
+# collect news data on the web
 def collect_data():
-
-    choice_collect=''
-
     nbc_url = "https://www.nbcnews.com/world"
 
     nbc_html = requests.get(nbc_url)
@@ -125,7 +114,6 @@ def collect_data():
     # NBCNEWS
 
     for link in nbcobj.find_all('h2', {'class': 'tease-card__headline'}):
-
         news_list['NBC'][link.text] = link.a['href']
 
     # CNNNEWS
@@ -156,13 +144,13 @@ def collect_data():
 
         if choice_collect == 'p' or choice_collect == 'P':
 
-            for website, link in news_list.items():
+            for website, link_collect in news_list.items():
 
                 print("\n*** " + website + " News***\n")
 
-                for title in link:
+                for title in link_collect:
                     print('Headline: ' + title)
-                    print('Link: ' + link[title])
+                    print('Link: ' + link_collect[title])
                     print('Date Published' + date_now + "\n")
             choices()
 
@@ -178,13 +166,13 @@ def collect_data():
 
                 writer = csv.DictWriter(fd, fieldnames=fieldnames)
 
-                for website, link in news_list.items():
+                for website, link_collect in news_list.items():
 
                     # check if data already exists still on works
 
-                    for title in link:
+                    for title in link_collect:
                         writer.writerow(
-                            {'News Website': website, 'News Title': title, 'Link': link[title],
+                            {'News Website': website, 'News Title': title, 'Link': link_collect[title],
                              'Date Published': date_now})
             print("Data saved to CSV File Successfully")
             choices()
@@ -192,9 +180,8 @@ def collect_data():
     choices()
 
 
-#search news data on data.csv file
+# search news data on data.csv file
 def search_data():
-    choice_search = ''
 
     def choices():
         print("**MENU**")
@@ -206,9 +193,7 @@ def search_data():
 
         # load csv to dictionary
 
-        data_file = {}
-        data_file['NBC'] = {}
-        data_file['CNN'] = {}
+        data_file = {'NBC': {}, 'CNN': {}}
         nbc_rows = 0
         cnn_rows = 0
 
@@ -248,9 +233,9 @@ def search_data():
             if news == 'n' or news == 'N':
                 print("NBC News Only:")
                 print("Number of News Found: " + str(nbc_rows) + "\n")
-                for id, info in data_file.items():
+                for id_search, info in data_file.items():
 
-                    if id == "NBC":
+                    if id_search == "NBC":
                         for key in info:
                             print("News Headline: " + key)
                             print("News Link: " + info[key]["Link"])
@@ -259,9 +244,9 @@ def search_data():
                 print("CNN News Only:")
                 print("Number of News Found: " + str(cnn_rows) + "\n")
 
-                for id, info in data_file.items():
+                for id_search, info in data_file.items():
 
-                    if id == "CNN":
+                    if id_search == "CNN":
                         for key in info:
                             print("News Headline: " + key)
                             print("News Link: " + info[key]["Link"])
@@ -277,10 +262,8 @@ def search_data():
 
             search = input('>')
 
-            #year search
+            # year search
             if search == 'y' or search == 'Y':
-
-                choice_year = ''
 
                 print("Enter Year:")
                 year = input('>')
@@ -289,11 +272,11 @@ def search_data():
                 print("[A]Show After" + year + " news")
                 choice_year = input('>')
 
-                #turns year into 2 digits
+                # turns year into 2 digits
                 year = year[2:]
 
                 if choice_year == 'y' or choice_year == 'Y':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][6:] == year:
@@ -302,7 +285,7 @@ def search_data():
                                 print("Date Published: " + info[key]["Date"] + "\n")
 
                 elif choice_year == 'b' or choice_year == 'B':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][6:]) < int(year):
@@ -310,7 +293,7 @@ def search_data():
                                 print("News Link: " + info[key]["Link"])
                                 print("Date Published: " + info[key]["Date"] + "\n")
                 elif choice_year == 'a' or choice_year == 'A':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][6:]) > int(year):
@@ -321,17 +304,15 @@ def search_data():
             # month search
             elif search == 'm' or search == 'M':
 
-                choice_month = ''
-
                 print("Enter Month:")
                 month = input('>')
                 print("[Y]Show All " + month + " news")
                 print("[B]Show Before " + month + " news")
                 print("[A]Show After " + month + " news")
-                choice_month =input('>')
+                choice_month = input('>')
 
                 if choice_month == 'y' or choice_month == 'Y':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][:2] == str(month):
@@ -340,7 +321,7 @@ def search_data():
                                 print("Date Published: " + info[key]["Date"] + "\n")
 
                 elif choice_month == 'b' or choice_month == 'B':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) < int(month):
@@ -348,7 +329,7 @@ def search_data():
                                 print("News Link: " + info[key]["Link"])
                                 print("Date Published: " + info[key]["Date"] + "\n")
                 elif choice_month == 'a' or choice_month == 'A':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) > int(month):
@@ -356,21 +337,21 @@ def search_data():
                                 print("News Link: " + info[key]["Link"])
                                 print("Date Published: " + info[key]["Date"] + "\n")
 
-            #day search
+            # day search
 
             elif search == 'd' or search == 'D':
 
                 print("Enter Day:")
                 day = input('>')
 
-                print("[Y]Show All " + day  + " news")
-                print("[B]Show Before " + day  + " news")
-                print("[A]Show After " + day  + " news")
+                print("[Y]Show All " + day + " news")
+                print("[B]Show Before " + day + " news")
+                print("[A]Show After " + day + " news")
 
                 choice_day = input('>')
 
                 if choice_day == 'y' or choice_day == 'Y':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][3:5] == str(day):
@@ -379,7 +360,7 @@ def search_data():
                                 print("Date Published: " + info[key]["Date"] + "\n")
 
                 elif choice_day == 'b' or choice_day == 'B':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) < int(day):
@@ -387,7 +368,7 @@ def search_data():
                                 print("News Link: " + info[key]["Link"])
                                 print("Date Published: " + info[key]["Date"] + "\n")
                 elif choice_day == 'a' or choice_day == 'A':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) > int(day):
@@ -410,15 +391,15 @@ def search_data():
                 print("[A]Show After " + day + " " + month + " " + year + " news")
                 choice_custom = input('>')
 
-                #turns year into 2 digits
+                # turns year into 2 digits
                 year = year[2:]
-                custom_day = str(month+"-"+day+"-"+year)
+                custom_day = str(month + "-" + day + "-" + year)
 
-                #turns string date into datetime format
-                custom_date = datetime.datetime(int(year),int(month),int(day))
+                # turns string date into datetime format
+                custom_date = datetime.datetime(int(year), int(month), int(day))
 
                 if choice_custom == 'y' or choice_custom == 'Y':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"] == str(custom_day):
@@ -427,25 +408,25 @@ def search_data():
                                 print("Date Published: " + info[key]["Date"] + "\n")
 
                 elif choice_custom == 'b' or choice_custom == 'B':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             year = info[key]["Date"][6:]
                             month = info[key]["Date"][:2]
                             day = info[key]["Date"][3:5]
-                            news_date = datetime.datetime(2000+int(year),int(month),int(day))
+                            news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date < custom_date:
                                 print("News Headline: " + key)
                                 print("News Link: " + info[key]["Link"])
                                 print("Date Published: " + info[key]["Date"] + "\n")
                 elif choice_custom == 'a' or choice_custom == 'A':
-                    for id, info in data_file.items():
+                    for id_search, info in data_file.items():
 
                         for key in info:
                             year = info[key]["Date"][6:]
                             month = info[key]["Date"][:2]
                             day = info[key]["Date"][3:5]
-                            news_date = datetime.datetime(2000+int(year),int(month),int(day))
+                            news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date > custom_date:
                                 print("News Headline: " + key)
                                 print("News Link: " + info[key]["Link"])
@@ -473,15 +454,12 @@ def search_data():
     choices()
 
 
-#saves csv file to pdf
+# saves csv file to pdf
 def pdf():
+    # declarations
+    data_file = {'NBC': {}, 'CNN': {}}
 
-    #declarations
-    data_file = {}
-    data_file['NBC'] = {}
-    data_file['CNN'] = {}
-
-    #csv to dictionary
+    # csv to dictionary
     with open("data.csv", 'r') as data:
 
         reader = csv.reader(data)
@@ -497,31 +475,30 @@ def pdf():
 
     def choices():
 
-        def save_to_csv(company_save):
+        def save_to_csv(csv_save):
             with open('company_save.csv', 'a', newline='') as fd:
-
 
                 fieldnames = ['News Website', 'News Title', 'Link', 'Date Published']
 
                 writer = csv.DictWriter(fd, fieldnames=fieldnames)
 
-                for website, link in company_save.items():
+                for website, link_csv in csv_save.items():
                     # check if data already exists still on works
 
-                    for title in link:
+                    for title in link_csv:
                         writer.writerow(
-                            {'News Website': website, 'News Title': title, 'Link': link[title],
+                            {'News Website': website, 'News Title': title, 'Link': link_csv[title],
                              'Date Published': date_now})
                 print("Data saved to CSV File Successfully")
             save_to_pdf()
 
         def save_to_pdf():
 
-            csv = pd.read_csv('company_save.csv')
-            html_string = csv.to_html()
+            csv_file = pd.read_csv('company_save.csv')
+            html_string = csv_file.to_html()
             # configuration
             config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
-            pdfkit.from_string(html_string, str(date_now) + "_file.pdf",configuration=config)
+            pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
             os.remove('company_save.csv')
             print("PDF file saved.")
             choices()
@@ -533,18 +510,18 @@ def pdf():
         print("Press [M] Go to Menu")
         choice_save = input(">")
 
-        #saves csv to pdf
+        # saves csv to pdf
 
         company_save = {}
 
-        #save by company
+        # save by company
         if choice_save == 'c' or choice_save == 'C':
             print("**Company**")
             print("Press [C] CNN News")
             print("Press [N] NBC News")
             news_save = input(">")
 
-            #CNN save
+            # CNN save
             if news_save == 'c' or news_save == 'C':
                 company_save['CNN'] = {}
                 # save to csv
@@ -552,7 +529,6 @@ def pdf():
 
                     if id_save == "CNN":
                         for key in info:
-
                             company_save['CNN'][key] = {}
                             company_save['CNN'][key]["Link"] = info[key]["Link"]
                             company_save['CNN'][key]["Date"] = info[key]["Date"]
@@ -560,7 +536,7 @@ def pdf():
                 # import to excel
                 save_to_csv(company_save)
 
-            #NBC save
+            # NBC save
             elif news_save == 'n' or news_save == 'N':
                 company_save['NBC'] = {}
                 # save to csv
@@ -568,7 +544,6 @@ def pdf():
 
                     if id_save == "NBC":
                         for key in info:
-
                             company_save['NBC'][key] = {}
                             company_save['NBC'][key]["Link"] = info[key]["Link"]
                             company_save['NBC'][key]["Date"] = info[key]["Date"]
@@ -576,7 +551,7 @@ def pdf():
                 # import to excel
                 save_to_csv(company_save)
 
-        #save by date
+        # save by date
         elif choice_save == 'd' or choice_save == 'D':
 
             print("**Save by Date**")
@@ -589,8 +564,6 @@ def pdf():
 
             # year search
             if save == 'y' or save == 'Y':
-
-                choice_year = ''
 
                 print("Enter Year:")
                 year = input('>')
@@ -767,18 +740,18 @@ def pdf():
     choices()
 
 
-#MENU
+# MENU
 def menu():
     print("***MENU***\n")
-    print("[C]COLLECT DATA") #option to save to excel
-    print("[S]SEARCH DATA") #with filtering based on parameters
-    print("[P]SAVE PDF") #saves csv file to pdf file
-    print("[E]SEND TO EMAIL") #send the pdf file to inputed email
+    print("[C]COLLECT DATA")  # option to save to excel
+    print("[S]SEARCH DATA")  # with filtering based on parameters
+    print("[P]SAVE PDF")  # saves csv file to pdf file
+    print("[E]SEND TO EMAIL")  # send the pdf file to inputed email
     print("[T]Terminate Program")
 
     choice = input('>')
 
-    if  choice == 'C' or choice == 'c':
+    if choice == 'C' or choice == 'c':
         collect_data()
     elif choice == 'S' or choice == 's':
         search_data()
@@ -788,19 +761,18 @@ def menu():
         print("Exiting Program")
         exit()
 
+
 menu()
 
-#automatic collecting news data
-#if __name__ == '__main__':
-    #while True:
-       # auto_collect_news_data()
-        #time_wait = 24 #hours
-        #print(f'Waiting {time_wait} hours to collect data again....')
-        #time.sleep(time_wait * 3600)
+# automatic collecting news data
+# if __name__ == '__main__':
+# while True:
+# auto_collect_news_data()
+# time_wait = 24 #hours
+# print(f'Waiting {time_wait} hours to collect data again....')
+# time.sleep(time_wait * 3600)
 
-#machine learning
-
-
-#backup data
+# machine learning
 
 
+# backup data
