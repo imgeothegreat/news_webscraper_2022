@@ -220,7 +220,6 @@ def search_data():
         # add the total number of rows for the csv file
         total_rows = nbc_rows + cnn_rows
 
-        print("true")
         print(choice_search)
         # choices
         if choice_search == 'c' or choice_search == 'C':
@@ -551,6 +550,8 @@ def pdf():
                 # import to excel
                 save_to_csv(company_save)
 
+            choices()
+
         # save by date
         elif choice_save == 'd' or choice_save == 'D':
 
@@ -567,45 +568,49 @@ def pdf():
 
                 print("Enter Year:")
                 year = input('>')
-                print("[Y] Show All " + year + " news")
+                print("[Y]Show All " + year + " news")
                 print("[B]Show Before" + year + " news")
                 print("[A]Show After" + year + " news")
-                choice_year = input('>')
+                save_year = input('>')
 
                 # turns year into 2 digits
                 year = year[2:]
 
-                if choice_year == 'y' or choice_year == 'Y':
+                if save_year == 'y' or save_year == 'Y':
                     for id, info in data_file.items():
 
                         for key in info:
-                            if info[key]["Date"][6:] == year:
-                                company_save = info[key]["Date"] = link.a['href']
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                            if info[key]["Date"][6:] == str(year):
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
 
-                elif choice_year == 'b' or choice_year == 'B':
+                    # import to excel
+                    save_to_csv(company_save)
+
+                elif save_year == 'b' or save_year == 'B':
                     for id, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][6:]) < int(year):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
-                elif choice_year == 'a' or choice_year == 'A':
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
+                elif save_year == 'a' or save_year == 'A':
                     for id, info in data_file.items():
 
                         for key in info:
-                            if int(info[key]["Date"][6:]) > int(year):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                            if int(info[key]["Date"][6:]) > (year):
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
             # month search
-            elif search == 'm' or search == 'M':
-
-                choice_month = ''
+            elif save == 'm' or save == 'M':
 
                 print("Enter Month:")
                 month = input('>')
@@ -619,30 +624,36 @@ def pdf():
 
                         for key in info:
                             if info[key]["Date"][:2] == str(month):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
                 elif choice_month == 'b' or choice_month == 'B':
                     for id, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) < int(month):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
                 elif choice_month == 'a' or choice_month == 'A':
                     for id, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) > int(month):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
             # day search
 
-            elif search == 'd' or search == 'D':
+            elif save == 'd' or save == 'D':
 
                 print("Enter Day:")
                 day = input('>')
@@ -658,31 +669,37 @@ def pdf():
 
                         for key in info:
                             if info[key]["Date"][3:5] == str(day):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
                 elif choice_day == 'b' or choice_day == 'B':
                     for id, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) < int(day):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
                 elif choice_day == 'a' or choice_day == 'A':
                     for id, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) > int(day):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
                 choices()
 
             # custom search
-            elif search == 'c' or search == 'C':
+            elif save == 'c' or save == 'C':
                 print("Enter Day:")
                 day = input('>')
                 print("Enter Month:")
@@ -706,9 +723,11 @@ def pdf():
 
                         for key in info:
                             if info[key]["Date"] == str(custom_day):
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
                 elif choice_custom == 'b' or choice_custom == 'B':
                     for id, info in data_file.items():
@@ -719,9 +738,11 @@ def pdf():
                             day = info[key]["Date"][3:5]
                             news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date < custom_date:
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
                 elif choice_custom == 'a' or choice_custom == 'A':
                     for id, info in data_file.items():
 
@@ -731,13 +752,27 @@ def pdf():
                             day = info[key]["Date"][3:5]
                             news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date > custom_date:
-                                print("News Headline: " + key)
-                                print("News Link: " + info[key]["Link"])
-                                print("Date Published: " + info[key]["Date"] + "\n")
+                                company_save[info][key] = {}
+                                company_save[info][key]["Link"] = info[key]["Link"]
+                                company_save[info][key]["Date"] = info[key]["Date"]
+                    # import to excel
+                    save_to_csv(company_save)
 
             choices()
 
-    choices()
+        #save by all
+        elif choice_save == 'a' or choice_save == 'A':
+            for id_2, info in data_file.items():
+                for key in info:
+                    company_save[info][key] = {}
+                    company_save[info][key]["Link"] = info[key]["Link"]
+                    company_save[info][key]["Date"] = info[key]["Date"]
+            choices()
+        #go to menu
+        elif choice_save == 'm' or choice_save == 'M':
+            menu()
+
+
 
 
 # MENU
