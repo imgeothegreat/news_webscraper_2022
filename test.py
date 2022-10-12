@@ -577,35 +577,35 @@ def pdf():
                 year = year[2:]
 
                 if save_year == 'y' or save_year == 'Y':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][6:] == str(year):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
 
                     # import to excel
                     save_to_csv(company_save)
 
                 elif save_year == 'b' or save_year == 'B':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][6:]) < int(year):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
                 elif save_year == 'a' or save_year == 'A':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
-                            if int(info[key]["Date"][6:]) > (year):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                            if int(info[key]["Date"][6:]) > int(year):
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
@@ -620,34 +620,34 @@ def pdf():
                 choice_month = input('>')
 
                 if choice_month == 'y' or choice_month == 'Y':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][:2] == str(month):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
                 elif choice_month == 'b' or choice_month == 'B':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) < int(month):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
                 elif choice_month == 'a' or choice_month == 'A':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][:2]) > int(month):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
@@ -665,34 +665,34 @@ def pdf():
                 choice_day = input('>')
 
                 if choice_day == 'y' or choice_day == 'Y':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"][3:5] == str(day):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
                 elif choice_day == 'b' or choice_day == 'B':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) < int(day):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
                 elif choice_day == 'a' or choice_day == 'A':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if int(info[key]["Date"][3:5]) > int(day):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
@@ -719,18 +719,18 @@ def pdf():
                 custom_date = datetime.datetime(int(year), int(month), int(day))
 
                 if choice_custom == 'y' or choice_custom == 'Y':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             if info[key]["Date"] == str(custom_day):
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
                 elif choice_custom == 'b' or choice_custom == 'B':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             year = info[key]["Date"][6:]
@@ -738,13 +738,13 @@ def pdf():
                             day = info[key]["Date"][3:5]
                             news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date < custom_date:
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
                 elif choice_custom == 'a' or choice_custom == 'A':
-                    for id, info in data_file.items():
+                    for id_date, info in data_file.items():
 
                         for key in info:
                             year = info[key]["Date"][6:]
@@ -752,30 +752,29 @@ def pdf():
                             day = info[key]["Date"][3:5]
                             news_date = datetime.datetime(2000 + int(year), int(month), int(day))
                             if news_date > custom_date:
-                                company_save[info][key] = {}
-                                company_save[info][key]["Link"] = info[key]["Link"]
-                                company_save[info][key]["Date"] = info[key]["Date"]
+                                company_save[id_date][key] = {}
+                                company_save[id_date][key]["Link"] = info[key]["Link"]
+                                company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
                     save_to_csv(company_save)
 
             choices()
 
-        #save by all
+        # save by all
         elif choice_save == 'a' or choice_save == 'A':
-            for id_2, info in data_file.items():
+            for id_all, info in data_file.items():
                 for key in info:
-                    company_save[info][key] = {}
-                    company_save[info][key]["Link"] = info[key]["Link"]
-                    company_save[info][key]["Date"] = info[key]["Date"]
+                    company_save[id_all][key] = {}
+                    company_save[id_all][key]["Link"] = info[key]["Link"]
+                    company_save[id_all][key]["Date"] = info[key]["Date"]
             choices()
-        #go to menu
+        # go to menu
         elif choice_save == 'm' or choice_save == 'M':
             menu()
 
-
-
-
 # MENU
+
+
 def menu():
     print("***MENU***\n")
     print("[C]COLLECT DATA")  # option to save to excel
