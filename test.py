@@ -7,6 +7,8 @@ import pdfkit
 import os
 from datetime import date
 from bs4 import BeautifulSoup
+import smtplib
+from email import message
 
 # global variables
 news_list = {'NBC': {}, 'CNN': {}}
@@ -771,6 +773,31 @@ def pdf():
         # go to menu
         elif choice_save == 'm' or choice_save == 'M':
             menu()
+
+
+# Send_To_Email
+def send_email():
+
+    # port and password for SMTP server
+    port = 587
+    password = 'geo'
+
+    # message details
+    from_address = "geo.pineda456@gmail.com"
+    to_address = "geodominic.pineda@gmail.com"
+    subject = "Sending you News PDF File"
+    body = "Attach to this email is the attached News PDF File from python code"\
+
+    msg = message.Message()
+    msg.add_header('from', from_address)
+    msg.add_header('to', to_address)
+    msg.add_header('subject', subject)
+    msg.set_payload(body)
+
+    server = smtplib.SMTP('smtp.dreamhost.com', port)
+    server.login(from_address, password)
+    server.send_message(msg, from_addr=from_address, to_addrs=[to_address])
+
 
 # MENU
 
