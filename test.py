@@ -1,4 +1,9 @@
 import csv
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from os.path import basename
+
 import requests
 # import nltk
 import datetime
@@ -8,7 +13,6 @@ import os
 from datetime import date
 from bs4 import BeautifulSoup
 import smtplib
-from email import message
 
 # global variables
 news_list = {'NBC': {}, 'CNN': {}}
@@ -84,7 +88,7 @@ def auto_collect_news_data():
 
             news_list['CNN'][link.text] = link.a['href']
 
-    print("\nData Collected Succesfully")
+    print("\nData Collected Successfully")
 
     # import to excel
 
@@ -107,18 +111,33 @@ def auto_collect_news_data():
 
 # collect news data on the web
 def collect_data():
+    # SECTION TEXT
+    section = ["Coronavirus", "U.S. News", "Politics", "World", "Local", "Business", "Health", "Investigations",
+               "Culture Matters", "Science", 'Sports', "Tech & Media", "Decision 2022", "Video Features",
+               "Photos", "Weather", "Select", "Asian America", "NBCBLK", "NBC Latino", "NBC Out"]
+
     nbc_url = "https://www.nbcnews.com/world"
 
     nbc_html = requests.get(nbc_url)
 
     nbcobj = BeautifulSoup(nbc_html.content, 'lxml')
 
-    # NBCNEWS
+    # NBC_NEWS
 
     for link in nbcobj.find_all('h2', {'class': 'tease-card__headline'}):
         news_list['NBC'][link.text] = link.a['href']
 
-    # CNNNEWS
+    for link in nbcobj.find_all('h3', {'class': 'related-content__headline'}):
+        news_list['NBC'][link.text] = link.a['href']
+
+    for link in nbcobj.find_all('div', {'class': 'wide-tease-item__info-wrapper flex-grow-1-m'}):
+        text = link.text
+        for words in section:
+            text = text.removeprefix(words)
+            if len(link.text) != len(text):
+                break
+
+    # CNN_NEWS
 
     cnn_url = "https://edition.cnn.com/world"
 
@@ -126,16 +145,23 @@ def collect_data():
 
     cnnobj = BeautifulSoup(cnn_html.content, 'lxml')
 
-    for link in cnnobj.find_all('article', {'class': 'cd--large'}):
+    for link in cnnobj.find_all('h3', {'class': 'cd__headline'}):
 
         if link.a['href'][0] == "/":
-
             news_list['CNN'][link.text] = "https://edition.cnn.com" + link.a['href']
         else:
 
             news_list['CNN'][link.text] = link.a['href']
 
-    print("Data Collected Succesfully\n")
+    for link in cnnobj.find_all('div', {'class': 'cd__wrapper'}):
+
+        if link.a['href'][0] == "/":
+            news_list['CNN'][link.text] = "https://edition.cnn.com" + link.a['href']
+        else:
+
+            news_list['CNN'][link.text] = link.a['href']
+
+    print("Data Collected Successfully\n")
 
     def choices():
         print("**MENU**")
@@ -786,17 +812,32 @@ def send_email():
     from_address = "geo.pineda456@gmail.com"
     to_address = "geodominic.pineda@gmail.com"
     subject = "Sending you News PDF File"
-    body = "Attach to this email is the attached News PDF File from python code"\
+    content = "Attach to this email is the attached News PDF File from python code"\
 
-    msg = message.Message()
-    msg.add_header('from', from_address)
-    msg.add_header('to', to_address)
-    msg.add_header('subject', subject)
-    msg.set_payload(body)
+    msg = MIMEMultipart()
+    msg['From'] = from_address
+    msg['To'] = ('to', to_address)
+    msg['Subject'] = ('subject', subject)
+    body = MIMEText(content, 'plain')
+    msg.attach(body)
+
+    # opens pdf file
+    filename = str(date_now)+"_file.pdf"
+    with open(filename, 'r') as f:
+        attachment = MIMEApplication(f.read(), Name=basename(filename))
+        attachment['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(filename))
+
+    msg.attach(attachment)
 
     server = smtplib.SMTP('smtp.dreamhost.com', port)
     server.login(from_address, password)
     server.send_message(msg, from_addr=from_address, to_addrs=[to_address])
+    print("Email from" + from_address + " is successfully sent to " + to_address)
+
+
+# machine learning
+
+# backup data
 
 
 # MENU
@@ -807,7 +848,7 @@ def menu():
     print("[C]COLLECT DATA")  # option to save to excel
     print("[S]SEARCH DATA")  # with filtering based on parameters
     print("[P]SAVE PDF")  # saves csv file to pdf file
-    print("[E]SEND TO EMAIL")  # send the pdf file to inputed email
+    print("[E]SEND TO EMAIL")  # send the pdf file to inputted email
     print("[T]Terminate Program")
 
     choice = input('>')
@@ -818,6 +859,8 @@ def menu():
         search_data()
     elif choice == 'p' or choice == 'P':
         pdf()
+    elif choice == 'e' or choice == 'E':
+        send_email()
     elif choice == 't' or choice == 'T':
         print("Exiting Program")
         exit()
@@ -832,8 +875,3 @@ menu()
 # time_wait = 24 #hours
 # print(f'Waiting {time_wait} hours to collect data again....')
 # time.sleep(time_wait * 3600)
-
-# machine learning
-
-
-# backup data
