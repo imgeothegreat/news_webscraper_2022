@@ -1,9 +1,8 @@
 import csv
-from email.mime.application import MIMEApplication
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from os.path import basename
-
 import requests
 # import nltk
 import datetime
@@ -790,15 +789,21 @@ def pdf():
 
         # save by all
         elif choice_save == 'a' or choice_save == 'A':
+
             for id_all, info in data_file.items():
+                company_save['NBC'] = {}
+                company_save['CNN'] = {}
                 for key in info:
                     company_save[id_all][key] = {}
                     company_save[id_all][key]["Link"] = info[key]["Link"]
                     company_save[id_all][key]["Date"] = info[key]["Date"]
+            # import to excel
+            save_to_csv(company_save)
             choices()
         # go to menu
         elif choice_save == 'm' or choice_save == 'M':
             menu()
+    choices()
 
 
 # Send_To_Email
@@ -806,7 +811,7 @@ def send_email():
 
     # port and password for SMTP server
     port = 587
-    password = 'geo'
+    password = 'jgqwvyguzcrrpgwc'
 
     # message details
     from_address = "geo.pineda456@gmail.com"
@@ -823,15 +828,19 @@ def send_email():
 
     # opens pdf file
     filename = str(date_now)+"_file.pdf"
-    with open(filename, 'r') as f:
-        attachment = MIMEApplication(f.read(), Name=basename(filename))
-        attachment['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(filename))
+    binary_pdf = open(filename, 'rb')
 
-    msg.attach(attachment)
+    payload = MIMEBase('application', 'octate-stream', Name=filename)
+    payload.set_payload(binary_pdf.read())
+    encoders.encode_base64(payload)
+    payload.add_header('Content-Decomposition', 'attachment', filename=filename)
+    msg.attach(payload)
 
-    server = smtplib.SMTP('smtp.dreamhost.com', port)
+    server = smtplib.SMTP('smtp.gmail.com', port)
+    server.starttls()  # enable security
     server.login(from_address, password)
-    server.send_message(msg, from_addr=from_address, to_addrs=[to_address])
+    server.sendmail(from_address, to_address, msg.as_string())
+    server.quit()
     print("Email from" + from_address + " is successfully sent to " + to_address)
 
 
