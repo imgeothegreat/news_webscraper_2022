@@ -20,6 +20,7 @@
 ![image](https://user-images.githubusercontent.com/27014232/195586411-a9439a3f-93f0-47f4-8cff-841a76cf19bf.png)
 
 ## Data Collected:
+- News Website
 - News Headline
 - News Link
 - Data Published
@@ -32,6 +33,15 @@ CSV File is called data.csv]
 - time
 - datetime
 - bs4
+- basename
+- MIMEMultipart
+- MIMEtext
+- MIMEApplication
+- pandas
+- pdfkit
+- BeautifulSoup
+- smptlib
+- os
 
 ## NOTES
 Some website links from CNN are from their own websites and they only use /style links with no HTTPS from the beginning. That is why I made a function that
