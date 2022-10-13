@@ -8,9 +8,10 @@
 - [x] Save to CSV File
 - [x] Search by Company, Date (Day,Month,Year,Custom), All
 - [x] Save to pdf complete
-- [x] send attached pdf to recepient's email, 
-- [ ] machine learning algo
-- [ ] auto backup data
+- [x] Send attached pdf to recepient's email
+- [x] Added Duplication Checker
+- [ ] Machine learning algo
+- [ ] Auto backup data
 
 ## Sample CSV File
 ![image](https://user-images.githubusercontent.com/27014232/194724600-d07f1d42-a93a-4c28-8d47-863ff9cd787d.png)
