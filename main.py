@@ -531,7 +531,7 @@ def pdf():
             # configuration
             config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
             pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
-            #os.remove('company_save.csv')
+            os.remove('company_save.csv')
             print("PDF file saved.")
             choices()
 
