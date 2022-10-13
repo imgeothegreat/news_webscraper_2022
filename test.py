@@ -1,8 +1,8 @@
 import csv
-from email import encoders
-from email.mime.base import MIMEBase
+from os.path import basename
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 import requests
 # import nltk
 import datetime
@@ -809,39 +809,37 @@ def pdf():
 # Send_To_Email
 def send_email():
 
+    print("Enter receiver email address")
+    to_address = input('>')
+
     # port and password for SMTP server
-    port = 587
-    password = 'jgqwvyguzcrrpgwc'
+    password = 'fgfdfwqkztjdudtx'
 
     # message details
-    from_address = "geo.pineda456@gmail.com"
-    to_address = "geodominic.pineda@gmail.com"
+    from_address = "geothemiracle@gmail.com"
+    to_address = "geo.pineda456@gmail.com"
     subject = "Sending you News PDF File"
     content = "Attach to this email is the attached News PDF File from python code"\
 
     msg = MIMEMultipart()
     msg['From'] = from_address
-    msg['To'] = ('to', to_address)
-    msg['Subject'] = ('subject', subject)
+    msg['To'] = to_address
+    msg['Subject'] = subject
     body = MIMEText(content, 'plain')
     msg.attach(body)
 
     # opens pdf file
     filename = str(date_now)+"_file.pdf"
-    binary_pdf = open(filename, 'rb')
+    with open(filename, 'r', errors="ignore") as f:
+        attachment = MIMEApplication(f.read(), Name=basename(filename))
+        attachment['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(filename))
+    msg.attach(attachment)
 
-    payload = MIMEBase('application', 'octate-stream', Name=filename)
-    payload.set_payload(binary_pdf.read())
-    encoders.encode_base64(payload)
-    payload.add_header('Content-Decomposition', 'attachment', filename=filename)
-    msg.attach(payload)
-
-    server = smtplib.SMTP('smtp.gmail.com', port)
+    server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()  # enable security
     server.login(from_address, password)
     server.sendmail(from_address, to_address, msg.as_string())
-    server.quit()
-    print("Email from" + from_address + " is successfully sent to " + to_address)
+    print("Email with attached pdf is successfully sent to " + to_address)
 
 
 # machine learning
