@@ -1,4 +1,4 @@
-# news_webscraper_2022
+# Geo Pineda's News Webscraper for News Headlines (NBC and CNN News) Software
 - Created by @imgeothegreat
 - Collects news Headlines from CNN and NBC News every day. Data collected automatically converted to a CSV File.
 
