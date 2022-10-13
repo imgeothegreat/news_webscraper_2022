@@ -511,7 +511,7 @@ def pdf():
                 fieldnames = ['News Website', 'News Title', 'Link', 'Date Published']
 
                 writer = csv.DictWriter(fd, fieldnames=fieldnames)
-
+                writer.writeheader()
                 for website, link_csv in csv_save.items():
                     # check if data already exists still on works
 
@@ -527,7 +527,6 @@ def pdf():
 
             csv_file = pd.read_csv('company_save.csv')
             html_string = csv_file.to_html()
-            print(html_string)
             # configuration
             config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
             pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
