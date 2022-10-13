@@ -851,6 +851,9 @@ def send_email():
 
 
 def menu():
+
+    choice_list = ['C', 'c', 's', 'S', 'e', 'E', 't', 'T']
+
     print("***MENU***\n")
     print("[C]COLLECT DATA")  # option to save to excel
     print("[S]SEARCH DATA")  # with filtering based on parameters
@@ -871,6 +874,11 @@ def menu():
     elif choice == 't' or choice == 'T':
         print("Exiting Program")
         exit()
+
+    for letter in choice_list:
+        if choice != letter:
+            print("Wrong input, please enter again.")
+            menu()
 
 
 menu()
