@@ -15,6 +15,9 @@
 ## Sample CSV File
 ![image](https://user-images.githubusercontent.com/27014232/194724600-d07f1d42-a93a-4c28-8d47-863ff9cd787d.png)
 
+## Sample PDF File
+![image](https://user-images.githubusercontent.com/27014232/195586411-a9439a3f-93f0-47f4-8cff-841a76cf19bf.png)
+
 ## Data Collected:
 - News Headline
 - News Link
