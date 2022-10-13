@@ -517,8 +517,9 @@ def pdf():
 
                     for title in link_csv:
                         writer.writerow(
-                            {'News Website': website, 'News Title': title, 'Link': link_csv[title],
+                            {'News Website': website, 'News Title': title, 'Link': link_csv[title]["Link"],
                              'Date Published': date_now})
+
                 print("Data saved to CSV File Successfully")
             save_to_pdf()
 
@@ -526,10 +527,11 @@ def pdf():
 
             csv_file = pd.read_csv('company_save.csv')
             html_string = csv_file.to_html()
+            print(html_string)
             # configuration
             config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
             pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
-            os.remove('company_save.csv')
+            #os.remove('company_save.csv')
             print("PDF file saved.")
             choices()
 
