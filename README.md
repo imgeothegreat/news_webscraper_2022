@@ -3,12 +3,12 @@
 - Collects news Headlines from CNN and NBC News every day. Data collected automatically converted to a CSV File.
 
 
-## Still have missing features but the program already works. 
+## Version 1.0 Now WORKING! Machine learning algorithms and auto back up data on the way. 
 - [x] Auto Collect News Data every 24 Hours
 - [x] Save to CSV File
 - [x] Search by Company, Date (Day,Month,Year,Custom), All
-- [ ] Save to pdf incomplete
-- [ ] send email, 
+- [x] Save to pdf complete
+- [x] send attached pdf to recepient's email, 
 - [ ] machine learning algo
 - [ ] auto backup data
 
