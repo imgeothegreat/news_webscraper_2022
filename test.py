@@ -8,10 +8,14 @@ import requests
 import datetime
 import pandas as pd
 import pdfkit
-import os
 from datetime import date
 from bs4 import BeautifulSoup
 import smtplib
+import os
+
+# gui
+loading = "Loading Application...."
+title_application = "Geo Pineda's Web Scraper Software"
 
 # global variables
 news_list = {'NBC': {}, 'CNN': {}}
@@ -817,7 +821,6 @@ def send_email():
 
     # message details
     from_address = "geothemiracle@gmail.com"
-    to_address = "geo.pineda456@gmail.com"
     subject = "Sending you News PDF File"
     content = "Attach to this email is the attached News PDF File from python code"\
 
@@ -840,7 +843,9 @@ def send_email():
     server.login(from_address, password)
     server.sendmail(from_address, to_address, msg.as_string())
     print("Email with attached pdf is successfully sent to " + to_address)
+    server.quit()
 
+    menu()
 
 # machine learning
 
@@ -854,6 +859,7 @@ def menu():
 
     choice_list = ['C', 'c', 's', 'S', 'e', 'E', 't', 'T']
 
+    print("Geo Pineda's Web Scraper Software for News Headlines (NBC and CNN News)")
     print("***MENU***\n")
     print("[C]COLLECT DATA")  # option to save to excel
     print("[S]SEARCH DATA")  # with filtering based on parameters
