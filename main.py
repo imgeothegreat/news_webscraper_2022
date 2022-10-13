@@ -19,6 +19,8 @@ title_application = "Geo Pineda's Web Scraper Software"
 
 # global variables
 news_list = {'NBC': {}, 'CNN': {}}
+# for duplicate checker
+news_list_final = {'NBC': {}, 'CNN': {}}
 
 # DATE and TIME
 
@@ -189,6 +191,35 @@ def collect_data():
             menu()
 
         elif choice_collect == 's' or choice_collect == 'S':
+
+            # check if csv exists
+            exist = 0
+
+            if os.path.exists('data.csv'):
+                exist = 1
+                with open('data.csv', 'r') as data_check:
+                    # check if news already exist in data.csv
+                    for website, link_check in news_list.items():
+
+                        for title in link_check:
+                            reader = csv.reader(data_check)
+
+                            # goes back to the first row again
+                            data_check.seek(0)
+
+                            # counter to check if news title already exist in the csv file
+                            found = 0
+                            for line in reader:
+
+                                if title == line[1]:
+                                    found = 1
+                                    break
+
+                            if found != 1:
+                                news_list_final[website][title] = link_check
+
+                data_check.close()
+
             # import to excel
 
             with open('data.csv', 'a', newline='') as fd:
@@ -197,15 +228,28 @@ def collect_data():
 
                 writer = csv.DictWriter(fd, fieldnames=fieldnames)
 
-                for website, link_collect in news_list.items():
+                if exist == 0:
 
-                    # check if data already exists still on works
+                    for website, link_collect in news_list.items():
 
-                    for title in link_collect:
-                        writer.writerow(
-                            {'News Website': website, 'News Title': title, 'Link': link_collect[title],
-                             'Date Published': date_now})
+                        # check if data already exists still on works
+
+                        for title in link_collect:
+                            writer.writerow(
+                                {'News Website': website, 'News Title': title, 'Link': link_collect[title],
+                                 'Date Published': date_now})
+                elif exist == 1:
+                    for website, link_collect in news_list_final.items():
+
+                        # check if data already exists still on works
+
+                        for title in link_collect:
+                            writer.writerow(
+                                {'News Website': website, 'News Title': title, 'Link': link_collect[title],
+                                 'Date Published': date_now})
+
             print("Data saved to CSV File Successfully")
+
             choices()
 
     choices()
@@ -213,7 +257,6 @@ def collect_data():
 
 # search news data on data.csv file
 def search_data():
-
     def choices():
         print("**MENU**")
         print("Press [C] Search by Company")
@@ -808,12 +851,12 @@ def pdf():
         # go to menu
         elif choice_save == 'm' or choice_save == 'M':
             menu()
+
     choices()
 
 
 # Send_To_Email
 def send_email():
-
     print("Enter receiver email address")
     to_address = input('>')
 
@@ -823,8 +866,7 @@ def send_email():
     # message details
     from_address = "geothemiracle@gmail.com"
     subject = "Sending you News PDF File"
-    content = "Attach to this email is the attached News PDF File from python code"\
-
+    content = "Attach to this email is the attached News PDF File from python code"
     msg = MIMEMultipart()
     msg['From'] = from_address
     msg['To'] = to_address
@@ -833,7 +875,7 @@ def send_email():
     msg.attach(body)
 
     # opens pdf file
-    filename = str(date_now)+"_file.pdf"
+    filename = str(date_now) + "_file.pdf"
     with open(filename, 'r', errors="ignore") as f:
         attachment = MIMEApplication(f.read(), Name=basename(filename))
         attachment['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(filename))
@@ -848,6 +890,7 @@ def send_email():
 
     menu()
 
+
 # machine learning
 
 # backup data
@@ -857,7 +900,6 @@ def send_email():
 
 
 def menu():
-
     choice_list = ['C', 'c', 's', 'S', 'e', 'E', 't', 'T']
 
     print("Geo Pineda's Web Scraper Software for News Headlines (NBC and CNN News)")
