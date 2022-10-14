@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import smtplib
 import os
 import time
-
+import calendar
 
 # gui
 loading = "Loading Application...."
@@ -513,9 +513,13 @@ def search_data():
 
                 print("Enter Month:")
                 month = input('>')
-                print("[Y]Show All " + month + " news")
-                print("[B]Show Before " + month + " news")
-                print("[A]Show After " + month + " news")
+
+                # loop for month digit to month word
+                month_word = calendar.month_name[int(month)]
+
+                print("[Y]Show All " + month_word + " news")
+                print("[B]Show Before " + month_word + " news")
+                print("[A]Show After " + month_word + " news")
                 choice_month = input('>')
 
                 if choice_month == 'y' or choice_month == 'Y':
@@ -551,9 +555,9 @@ def search_data():
                 print("Enter Day:")
                 day = input('>')
 
-                print("[Y]Show All " + day + " news")
-                print("[B]Show Before " + day + " news")
-                print("[A]Show After " + day + " news")
+                print("[Y]Show All " + day + " day news")
+                print("[B]Show Before " + day + " day news")
+                print("[A]Show After " + day + " day news")
 
                 choice_day = input('>')
 
@@ -593,9 +597,9 @@ def search_data():
                 month = input('>')
                 print("Enter year:")
                 year = input('>')
-                print("[Y]Show All " + day + " " + month + " " + year + " news")
-                print("[B]Show Before " + day + " " + month + " " + year + " news")
-                print("[A]Show After " + day + " " + month + " " + year + " news")
+                print("[Y]Show All " + month + " " + day + " " + year + " news")
+                print("[B]Show Before " + month + " " + day + " " + year + " news")
+                print("[A]Show After " + month + " " + day + " " + year + " news")
                 choice_custom = input('>')
 
                 # turns year into 2 digits
@@ -684,7 +688,7 @@ def pdf():
 
     def choices():
 
-        def save_to_csv(csv_save):
+        def save_to_csv(csv_save, type_file):
             with open('company_save.csv', 'a', newline='') as fd:
 
                 fieldnames = ['News Website', 'News Title', 'Link', 'Date Published']
@@ -701,17 +705,33 @@ def pdf():
 
                 print("Data saved to CSV File Successfully")
             fd.close()
-            save_to_pdf()
+            save_to_pdf(type_file)
 
-        def save_to_pdf():
+        def save_to_pdf(type_file):
 
             csv_file = pd.read_csv('company_save.csv')
             html_string = csv_file.to_html()
             # configuration
             config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
-            pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
+
+            # renames file based on type of file being saved
+            filename = ""
+
+            if type_file == "cnn":
+                filename = "CNN News File_" + str(date_now) + "_file.pdf"
+                pdfkit.from_string(html_string, filename, configuration=config)
+            elif type_file == "nbc":
+                filename = "NBC News File_" + str(date_now) + "_file.pdf"
+                pdfkit.from_string(html_string, filename, configuration=config)
+            elif type_file == "date":
+                filename = "Date File_" + str(date_now) + "_file.pdf"
+                pdfkit.from_string(html_string, filename, configuration=config)
+            elif type_file == "all":
+                filename = "All News Data_" + str(date_now) + "_file.pdf"
+                pdfkit.from_string(html_string, filename, configuration=config)
+
             os.remove('company_save.csv')
-            print("PDF file saved.")
+            print(filename + " file saved successfully.")
             choices()
 
         def save_all():
@@ -723,7 +743,7 @@ def pdf():
                     company_save[id_all][key_all]["Link"] = info_all[key_all]["Link"]
                     company_save[id_all][key_all]["Date"] = info_all[key_all]["Date"]
             # import to excel
-            save_to_csv(company_save)
+            save_to_csv(company_save, "all")
             choices()
 
         print("**MENU**")
@@ -757,7 +777,7 @@ def pdf():
                             company_save['CNN'][key]["Date"] = info[key]["Date"]
 
                 # import to excel
-                save_to_csv(company_save)
+                save_to_csv(company_save, "cnn")
 
             # NBC save
             elif news_save == 'n' or news_save == 'N':
@@ -772,7 +792,7 @@ def pdf():
                             company_save['NBC'][key]["Date"] = info[key]["Date"]
 
                 # import to excel
-                save_to_csv(company_save)
+                save_to_csv(company_save, "nbc")
 
             choices()
 
@@ -810,7 +830,7 @@ def pdf():
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
 
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
                 elif save_year == 'b' or save_year == 'B':
                     for id_date, info in data_file.items():
@@ -821,7 +841,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
                 elif save_year == 'a' or save_year == 'A':
                     for id_date, info in data_file.items():
 
@@ -831,7 +851,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
             # month search
             elif save == 'm' or save == 'M':
@@ -852,7 +872,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
                 elif choice_month == 'b' or choice_month == 'B':
                     for id_date, info in data_file.items():
@@ -863,7 +883,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
                 elif choice_month == 'a' or choice_month == 'A':
                     for id_date, info in data_file.items():
 
@@ -873,7 +893,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
             # day search
 
@@ -897,7 +917,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
                 elif choice_day == 'b' or choice_day == 'B':
                     for id_date, info in data_file.items():
@@ -908,7 +928,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
                 elif choice_day == 'a' or choice_day == 'A':
                     for id_date, info in data_file.items():
 
@@ -918,7 +938,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
                 choices()
 
@@ -951,7 +971,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
                 elif choice_custom == 'b' or choice_custom == 'B':
                     for id_date, info in data_file.items():
@@ -966,7 +986,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
                 elif choice_custom == 'a' or choice_custom == 'A':
                     for id_date, info in data_file.items():
 
@@ -980,7 +1000,7 @@ def pdf():
                                 company_save[id_date][key]["Link"] = info[key]["Link"]
                                 company_save[id_date][key]["Date"] = info[key]["Date"]
                     # import to excel
-                    save_to_csv(company_save)
+                    save_to_csv(company_save, "date")
 
             choices()
 
