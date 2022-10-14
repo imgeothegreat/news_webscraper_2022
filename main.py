@@ -155,6 +155,7 @@ def auto_collect_news_data():
                     writer.writerow(
                         {'News Website': website, 'News Title': title, 'Link': link_collect[title],
                          'Date Published': date_now})
+    fd.close()
 
     print("Data saved to CSV File Successfully")
 
@@ -199,6 +200,7 @@ def auto_collect_news_data():
                 writer.writerow(
                     {'News Website': website, 'News Title': title, 'Link': link_csv[title]["Link"],
                      'Date Published': date_now})
+    fd.close()
 
     # save to pdf
     csv_file = pd.read_csv('company_save.csv')
@@ -208,6 +210,37 @@ def auto_collect_news_data():
     pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
     os.remove('company_save.csv')
     print("PDF file saved.")
+
+    # send email
+
+    # port and password for SMTP server
+    password = 'fgfdfwqkztjdudtx'
+    to_address = 'geodominic.pineda@gmail.com'
+
+    # message details
+    from_address = "geothemiracle@gmail.com"
+    subject = "Sending you News PDF File"
+    content = "Attach to this email is the attached News PDF File from python code"
+    msg = MIMEMultipart()
+    msg['From'] = from_address
+    msg['To'] = to_address
+    msg['Subject'] = subject
+    body = MIMEText(content, 'plain')
+    msg.attach(body)
+
+    # opens pdf file
+    filename = str(date_now) + "_file.pdf"
+    with open(filename, 'r', errors="ignore") as f:
+        attachment = MIMEApplication(f.read(), Name=basename(filename))
+        attachment['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(filename))
+    msg.attach(attachment)
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()  # enable security
+    server.login(from_address, password)
+    server.sendmail(from_address, to_address, msg.as_string())
+    print("Email with attached pdf is successfully sent to " + to_address)
+    server.quit()
 
 
 # collect news data on the web
@@ -347,6 +380,7 @@ def collect_data():
                                 {'News Website': website, 'News Title': title, 'Link': link_collect[title],
                                  'Date Published': date_now})
 
+            fd.close()
             print("Data saved to CSV File Successfully")
 
             choices()
@@ -390,6 +424,7 @@ def search_data():
                 if top_level_key == "CNN":
                     cnn_rows += 1
 
+        data.close()
         # add the total number of rows for the csv file
         total_rows = nbc_rows + cnn_rows
 
@@ -645,6 +680,8 @@ def pdf():
             data_file[top_level_key][nested_key]["Link"] = link
             data_file[top_level_key][nested_key]["Date"] = date_value
 
+    data.close()
+
     def choices():
 
         def save_to_csv(csv_save):
@@ -663,6 +700,7 @@ def pdf():
                              'Date Published': date_now})
 
                 print("Data saved to CSV File Successfully")
+            fd.close()
             save_to_pdf()
 
         def save_to_pdf():
@@ -989,8 +1027,9 @@ def send_email():
     server.sendmail(from_address, to_address, msg.as_string())
     print("Email with attached pdf is successfully sent to " + to_address)
     server.quit()
+    f.close()
 
-    menu()
+    # menu()
 
 
 # machine learning
