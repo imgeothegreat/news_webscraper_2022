@@ -12,6 +12,8 @@ from datetime import date
 from bs4 import BeautifulSoup
 import smtplib
 import os
+import time
+
 
 # gui
 loading = "Loading Application...."
@@ -95,6 +97,36 @@ def auto_collect_news_data():
 
     print("\nData Collected Successfully")
 
+    # check if csv exists
+    exist = 0
+    news_list_final = {'NBC': {}, 'CNN': {}}
+
+    if os.path.exists('data.csv'):
+        exist = 1
+        with open('data.csv', 'r') as data_check:
+            # check if news already exist in data.csv
+            for website, link_check in news_list.items():
+
+                for title in link_check:
+
+                    reader = csv.reader(data_check)
+
+                    # goes back to the first row again
+                    data_check.seek(0)
+
+                    # counter to check if news title already exist in the csv file
+                    found = 0
+                    for line in reader:
+
+                        if title == line[1]:
+                            found = 1
+                            break
+
+                    if found != 1:
+                        news_list_final[website][title] = news_list[website][title]
+
+        data_check.close()
+
     # import to excel
 
     with open('data.csv', 'a', newline='') as fd:
@@ -102,16 +134,80 @@ def auto_collect_news_data():
         fieldnames = ['News Website', 'News Title', 'Link', 'Date Published']
 
         writer = csv.DictWriter(fd, fieldnames=fieldnames)
-        for website, link in news_list.items():
 
+        if exist == 0:
+
+            for website, link_collect in news_list.items():
+
+                # check if data already exists still on works
+
+                for title in link_collect:
+                    writer.writerow(
+                        {'News Website': website, 'News Title': title, 'Link': link_collect[title],
+                         'Date Published': date_now})
+        elif exist == 1:
+
+            for website, link_collect in news_list_final.items():
+
+                # check if data already exists still on works
+
+                for title in link_collect:
+                    writer.writerow(
+                        {'News Website': website, 'News Title': title, 'Link': link_collect[title],
+                         'Date Published': date_now})
+
+    print("Data saved to CSV File Successfully")
+
+    # save to pdf automatically
+    # declarations
+    data_file = {'NBC': {}, 'CNN': {}}
+    company_save = {}
+
+    # csv to dictionary
+    with open("data.csv", 'r') as data:
+
+        reader = csv.reader(data)
+
+        for line in reader:
+            top_level_key = line[0]
+            nested_key = line[1]
+            link = line[2]
+            date_value = line[3]
+            data_file[top_level_key][nested_key] = {}
+            data_file[top_level_key][nested_key]["Link"] = link
+            data_file[top_level_key][nested_key]["Date"] = date_value
+
+    for id_all, info_all in data_file.items():
+        company_save['NBC'] = {}
+        company_save['CNN'] = {}
+        for key_all in info_all:
+            company_save[id_all][key_all] = {}
+            company_save[id_all][key_all]["Link"] = info_all[key_all]["Link"]
+            company_save[id_all][key_all]["Date"] = info_all[key_all]["Date"]
+
+    # import to excel
+    with open('company_save.csv', 'a', newline='') as fd:
+
+        fieldnames = ['News Website', 'News Title', 'Link', 'Date Published']
+
+        writer = csv.DictWriter(fd, fieldnames=fieldnames)
+        writer.writeheader()
+        for website, link_csv in company_save.items():
             # check if data already exists still on works
 
-            for title in link:
+            for title in link_csv:
                 writer.writerow(
-                    {'News Website': website, 'News Title': title, 'Link': link[title],
+                    {'News Website': website, 'News Title': title, 'Link': link_csv[title]["Link"],
                      'Date Published': date_now})
 
-    print("Data saved to CSV File Successfully\n")
+    # save to pdf
+    csv_file = pd.read_csv('company_save.csv')
+    html_string = csv_file.to_html()
+    # configuration
+    config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    pdfkit.from_string(html_string, str(date_now) + "_file.pdf", configuration=config)
+    os.remove('company_save.csv')
+    print("PDF file saved.")
 
 
 # collect news data on the web
@@ -241,7 +337,7 @@ def collect_data():
                                 {'News Website': website, 'News Title': title, 'Link': link_collect[title],
                                  'Date Published': date_now})
                 elif exist == 1:
-                    print("found")
+
                     for website, link_collect in news_list_final.items():
 
                         # check if data already exists still on works
@@ -580,6 +676,18 @@ def pdf():
             print("PDF file saved.")
             choices()
 
+        def save_all():
+            for id_all, info_all in data_file.items():
+                company_save['NBC'] = {}
+                company_save['CNN'] = {}
+                for key_all in info_all:
+                    company_save[id_all][key_all] = {}
+                    company_save[id_all][key_all]["Link"] = info_all[key_all]["Link"]
+                    company_save[id_all][key_all]["Date"] = info_all[key_all]["Date"]
+            # import to excel
+            save_to_csv(company_save)
+            choices()
+
         print("**MENU**")
         print("Press [C] Save by Company")
         print("Press [D] Save by Date")
@@ -840,17 +948,8 @@ def pdf():
 
         # save by all
         elif choice_save == 'a' or choice_save == 'A':
+            save_all()
 
-            for id_all, info in data_file.items():
-                company_save['NBC'] = {}
-                company_save['CNN'] = {}
-                for key in info:
-                    company_save[id_all][key] = {}
-                    company_save[id_all][key]["Link"] = info[key]["Link"]
-                    company_save[id_all][key]["Date"] = info[key]["Date"]
-            # import to excel
-            save_to_csv(company_save)
-            choices()
         # go to menu
         elif choice_save == 'm' or choice_save == 'M':
             menu()
@@ -933,12 +1032,12 @@ def menu():
             menu()
 
 
-menu()
+# menu()
 
 # automatic collecting news data
-# if __name__ == '__main__':
-# while True:
-# auto_collect_news_data()
-# time_wait = 24 #hours
-# print(f'Waiting {time_wait} hours to collect data again....')
-# time.sleep(time_wait * 3600)
+if __name__ == '__main__':
+    while True:
+        auto_collect_news_data()
+        time_wait = 24  # hours
+        print(f'Waiting {time_wait} hours to collect data again....')
+        time.sleep(time_wait * 3600)
