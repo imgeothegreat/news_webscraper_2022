@@ -7,8 +7,8 @@
 - [x] Auto Collect News Data every 24 Hours
 - [x] Save to CSV File
 - [x] Search by Company, Date (Day,Month,Year,Custom), All
-- [x] Save to pdf complete
-- [x] Send attached pdf to recepient's email
+- [x] Save to PDF
+- [x] Send attached PDF to recepient's email
 - [x] Added Duplication Checker
 - [ ] Machine learning algo
 - [ ] Auto backup data
