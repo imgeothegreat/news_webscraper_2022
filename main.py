@@ -194,6 +194,7 @@ def collect_data():
 
             # check if csv exists
             exist = 0
+            news_list_final = {'NBC': {}, 'CNN': {}}
 
             if os.path.exists('data.csv'):
                 exist = 1
@@ -202,6 +203,7 @@ def collect_data():
                     for website, link_check in news_list.items():
 
                         for title in link_check:
+
                             reader = csv.reader(data_check)
 
                             # goes back to the first row again
@@ -216,7 +218,7 @@ def collect_data():
                                     break
 
                             if found != 1:
-                                news_list_final[website][title] = link_check
+                                news_list_final[website][title] = news_list[website][title]
 
                 data_check.close()
 
@@ -239,6 +241,7 @@ def collect_data():
                                 {'News Website': website, 'News Title': title, 'Link': link_collect[title],
                                  'Date Published': date_now})
                 elif exist == 1:
+                    print("found")
                     for website, link_collect in news_list_final.items():
 
                         # check if data already exists still on works
