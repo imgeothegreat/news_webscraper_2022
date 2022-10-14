@@ -12,8 +12,10 @@ from datetime import date
 from bs4 import BeautifulSoup
 import smtplib
 import os
-import time
+import time  # this turns grey when I disable the auto collect
 import calendar
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 # gui
 loading = "Loading Application...."
@@ -1054,8 +1056,24 @@ def send_email():
 
 # machine learning
 
-# backup data
+# gcloud backup data
 
+# sql
+def backup():
+    gauth = GoogleAuth()
+    drive = GoogleDrive(gauth)
+
+    upload_file_list = ['data.csv', 'main.py']
+    for upload_file in upload_file_list:
+
+        gfile = drive.CreateFile({'parents': [{'id': '1igD-KW2bSIXTbMyPOJzLMQnt--GPin6K'}]})
+        # Read file and set it as the content of this instance.
+        gfile.SetContentFile(upload_file)
+        gfile.Upload()  # Upload the file.
+    print("Files Uploaded to Gdrive Folder Successfully\n")
+
+    # If Files doesnt exist
+    menu()
 
 # MENU
 
@@ -1069,6 +1087,7 @@ def menu():
     print("[S]SEARCH DATA")  # with filtering based on parameters
     print("[P]SAVE PDF")  # saves csv file to pdf file
     print("[E]SEND TO EMAIL")  # send the pdf file to inputted email
+    print("[B]BACK UP FILES")
     print("[T]Terminate Program")
 
     choice = input('>')
@@ -1081,6 +1100,8 @@ def menu():
         pdf()
     elif choice == 'e' or choice == 'E':
         send_email()
+    elif choice == 'b' or choice == 'B':
+        backup()
     elif choice == 't' or choice == 'T':
         print("Exiting Program")
         exit()
@@ -1091,12 +1112,14 @@ def menu():
             menu()
 
 
-# menu()
+menu()
 
 # automatic collecting news data
+"""
 if __name__ == '__main__':
     while True:
         auto_collect_news_data()
         time_wait = 24  # hours
         print(f'Waiting {time_wait} hours to collect data again....')
         time.sleep(time_wait * 3600)
+"""
