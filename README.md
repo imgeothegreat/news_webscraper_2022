@@ -10,7 +10,7 @@
 - [x] Save to PDF
 - [x] Send attached PDF to recepient's email
 - [x] Added Duplication Checker
-- [ ] Machine learning algo
+- [x] Machine learning algo
 - [x] Auto backup data
 
 ## Sample CSV File
