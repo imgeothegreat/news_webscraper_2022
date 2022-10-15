@@ -331,21 +331,22 @@ def collect_data():
                 exist = 1
                 with open('data.csv', 'r') as data_check:
                     # check if news already exist in data.csv
+
+                    reader = csv.reader(data_check)
+
+                    # counts news id
+                    for line in reader:
+                        news_id += 1
+                    news_id -= 1
                     for website, link_check in news_list.items():
 
                         for title in link_check:
-
-                            reader = csv.reader(data_check)
 
                             # goes back to the first row again
                             data_check.seek(0)
 
                             # counter to check if news title already exist in the csv file
                             found = 0
-
-                            # counts news id
-                            for line in reader:
-                                news_id += 1
 
                             # goes back to the first row again
                             data_check.seek(0)
